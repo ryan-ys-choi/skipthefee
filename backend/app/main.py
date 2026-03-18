@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import get_connection
+from app.ai import estimate_prices
 
 
 app = FastAPI(title="SkipTheFee API")
@@ -59,4 +60,13 @@ def search(restaurant: str, city: str):
             "total": float(row[7])
         })
 
-    return {"results": results} 
+    if len(results) == 0:
+        # If no data in DB, call AI to estimate prices
+        ai_results = estimate_prices(restaurant, city)
+        for r in ai_results:
+            r["restaurant"] = restaurant
+            r["city"] = city
+            r["estimated"] = True
+        return {"results": ai_results, "source": "ai"}
+
+    return {"results": results, "source": "database"}
