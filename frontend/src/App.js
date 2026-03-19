@@ -4,6 +4,7 @@ function App() {
   const [restaurant, setRestaurant] = useState("");
   const [city, setCity] = useState("");
   const [results, setResults] = useState([]);
+  const [source, setSource] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,6 +17,7 @@ function App() {
       );
       const data = await response.json();
       setResults(data.results);
+      setSource(data.source);
     } catch (err) {
       setError("Something went wrong. Is the server running?");
     }
@@ -54,6 +56,8 @@ function App() {
       {results.length > 0 && (
         <div style={{ marginTop: "30px" }}>
           <h2>{results[0].restaurant} — {results[0].city}</h2>
+          {source === "ai" && <p style={{ color: "#6c5ce7" }}>Prices estimated by AI — not real time data</p>}
+          {source === "database" && <p style={{ color: "#00b894" }}>Real prices from our database</p>}     
           {results.map((r, i) => (
             <div key={i} style={{
               padding: "16px",
@@ -63,6 +67,7 @@ function App() {
               backgroundColor: i === 0 ? "#f0fff8" : "white"
             }}>
               {i === 0 && <span style={{ color: "#00b894", fontWeight: "bold" }}>✅ CHEAPEST</span>}
+              {r.estimated && <span style={{ color: "#6c5ce7", fontWeight: "bold", marginLeft: "10px" }}>AI Estimated</span>}
               <h3 style={{ margin: "4px 0", textTransform: "capitalize" }}>{r.platform}</h3>
               <p style={{ margin: "4px 0", color: "gray" }}>{r.item_name}</p>
               <p>Item: ${r.item_price} + Delivery: ${r.delivery_fee} + Fees: ${r.service_fee}</p>
