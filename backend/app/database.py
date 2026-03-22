@@ -6,7 +6,7 @@ load_dotenv()
 
 def get_connection():
     return psycopg2.connect(
-        host="localhost",
+        host=os.getenv("DB_HOST", "localhost"),
         database="skipthefee",
         user="postgres",
         password=os.getenv("DB_PASSWORD")
