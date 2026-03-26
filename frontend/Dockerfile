@@ -4,13 +4,13 @@ WORKDIR /app
 
 COPY package*.json .
 
-RUN npm install
+RUN npm install -g serve
 
-COPY . .
+COPY build/ ./build/
 
 ARG REACT_APP_API_URL
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "3000"]
 
