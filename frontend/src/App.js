@@ -12,8 +12,10 @@ function App() {
     setLoading(true);
     setError("");
     try {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
       const response = await fetch(
-        `http://localhost:8000/search?restaurant=${restaurant}&city=${city}`
+        `${API_URL}/search?restaurant=${restaurant}&city=${city}`
       );
       const data = await response.json();
       setResults(data.results);
